@@ -10,12 +10,13 @@
 //#include<stdio.h>
 #define OK 1
 #define ERROR 0
-#define Status _Bool
+#define Status int
+#define MAX 93376
 int ve[MAX_VERTEX_NUM];		//各顶点最早发生时间数组
 int vl[MAX_VERTEX_NUM];		//各顶点最迟发生时间数组
 
 
-void FindInDegree(ALGraph G, int indegree[MAX_VERTEX_NUM])
+Status FindInDegree(ALGraph G, int indegree[MAX_VERTEX_NUM])
 {
 	int i = 0;
 	ArcNode *p = NULL;	//遍历指针
@@ -72,44 +73,75 @@ _Bool TopologicalSort(ALGraph G,SqStack *T)
 }
 
 
-_Bool CriticalPath(ALGraph G)
+Status CriticalPath(ALGraph G)
 {
-	_Bool TopologicalSort(ALGraph G, SqStack *T);
+	//Status TopologicalSort(ALGraph G, SqStack *T);
 	//G为有向网，输出G的各项关键活动
 	SqStack T;
-	int i, j, k, dut, ee, el;
-	char tag;
+	int i, j, k, t, dut, ee, el;
+	int time=0;	//时间
 	ArcNode *p = NULL;
 	InitStack(&T);
-	TopologicalSort(G, &T);
-	//if (!TopologicalSort(G, &T)) return ERROR;
+	//TopologicalSort(G, &T);
+	if (!TopologicalSort(G, &T)) return ERROR;
 	for (i = 0; i< G.vexnum; i++)		//初始化最迟发生时间数组
 	{
-		vl[i] = ve[i];
+		vl[i] = MAX;
 	}
+	vl[G.vexnum-1] = ve[G.vexnum-1];
 	while (!StackEmpty(&T))		//按拓扑序列求vl
 	{
-		for (Pop(&T, &j), p = G.vretices[j].firstarc; p; p = p->nextarc)
+		Pop(&T, &j);
+		p = G.vretices[j].firstarc;
+		while(p!=NULL)
 		{
 			k = p->adjvex;
 			dut = p->weight;
 			if (vl[k] - dut < vl[j]) vl[j] = vl[k] - dut;
+			p = p->nextarc;
 		}
-		for (j = 0; j < G.arcnum; j++)	//时间余量为0
+	}
+	printf("关键活动：");
+	for (j = 0; j < G.arcnum; j++)	//求关键活动，时间余量为0
+	{
+		for (p = G.vretices[j].firstarc; p; p = p->nextarc)
 		{
-			for (p = G.vretices[j].firstarc; p; p = p->nextarc)
+			k = p->adjvex;
+			dut = p->weight;
+			ee = ve[j];
+			el = vl[k] - dut;
+			if (ee == el) printf("%c ", *(p->info));
+		}
+	}
+	i = 0;
+	t = 0;
+	printf("\n关键路径：");
+	for (j = 0; j < G.arcnum; j++)	//求关键路径，以及时间
+	{
+		for (p = G.vretices[j].firstarc, i = 0; p; p = p->nextarc)
+		{
+			k = p->adjvex;
+			dut = p->weight;
+			ee = ve[j];
+			el = vl[k] - dut;
+			if (ee == el)
 			{
-				k = p->adjvex;
-				dut = p->weight;
-				ee = ve[j];
-				el = vl[k] - dut;
-				tag = (ee == el) ? '*' : ' ';
-				printf("%c %c %d %d %d %c\n", G.vretices[j].data, G.vretices[k].data, dut, ee, el, tag);
+				if (i == 0)
+				{
+					time = time + p->weight;
+					printf("%c ", *(p->info));
+					i++;
+					if (p->adjvex == G.vexnum - 1)
+					{
+						t = 1;
+						break;
+					}
+				}
+
 			}
 		}
-
+		if (t == 1)break;
 	}
-
-
-
+	printf("\n完成关键活动所需时间：%d\n", time);
+		
 }
