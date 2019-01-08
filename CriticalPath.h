@@ -81,6 +81,7 @@ Status CriticalPath(ALGraph G)
 	int i, j, k, t, dut, ee, el;
 	int time=0;	//时间
 	ArcNode *p = NULL;
+	ArcNode *q = NULL;
 	InitStack(&T);
 	//TopologicalSort(G, &T);
 	if (!TopologicalSort(G, &T)) return ERROR;
@@ -113,68 +114,44 @@ Status CriticalPath(ALGraph G)
 			if (ee == el) printf("%c ", *(p->info));
 		}
 	}
-	i = 0;
-	t = 0;
-	printf("\n关键路径：");
-	//for (j = 0; j < G.arcnum; j++)	//求关键路径，以及时间
-	//{
-	//	for (p = G.vretices[j].firstarc, i = 0; p; p = p->nextarc)
-	//	{
-	//		k = p->adjvex;
-	//		dut = p->weight;
-	//		ee = ve[j];
-	//		el = vl[k] - dut;
-	//		if (ee == el)
-	//		{
-	//			if (i == 0)
-	//			{
-	//				time = time + p->weight;
-	//				printf("%c ", *(p->info));
-	//				i++;
-	//				if (p->adjvex == G.vexnum - 1)
-	//				{
-	//					t = 1;
-	//					break;
-	//				}
-	//			}
-
-	//		}
-	//	}
-	//	if (t == 1)break;
-	//}
-
-
-	for (j = 0; j < G.arcnum; )	//求关键路径，以及时间
+	printf("\n关键路径：\n");
+	t = 1;
+	while (t > 0)	//输出多条关键路径
 	{
-		for (p = G.vretices[j].firstarc, i = 0; p; p = p->nextarc)
+		time = 0;	//初始化时间
+		for (j = 0;j != G.vexnum-1;j = q->adjvex)	//求关键路径，以及时间
 		{
-			k = p->adjvex;
-			dut = p->weight;
-			ee = ve[j];
-			el = vl[k] - dut;
-			if (ee == el)
+			for (p = G.vretices[j].firstarc, q = p,i = 0; p!=NULL; p = p->nextarc)
 			{
-				if (i == 0)
+				k = p->adjvex;
+				dut = p->weight;
+				ee = ve[j];
+				el = vl[k] - dut;
+				if (ee == el)
 				{
-					time = time + p->weight;
-					printf("%c ", *(p->info));
-					j = p->adjvex;	//下一个该找的顶点
-					i++;
-					if (p->adjvex == G.vexnum - 1)
+					if (i == 0)
 					{
-						t = 1;
-						break;
+						q = p;
+						time = time + p->weight;
+						printf("%c ", *(p->info));
+						//p->weight = 0;
+						
+						i++;
+
+					}
+					else
+					{
+						t++;
+						q->weight = 0;
+						//j = q->adjvex;	//下一个该找的顶点
 					}
 				}
-
 			}
 		}
-		if (t == 1)break;
+		t--;
+		printf("\n完成关键活动所需时间：%d\n", time);
+
 	}
-
-
-
-
-	printf("\n完成关键活动所需时间：%d\n", time);
+	
 		
 }
