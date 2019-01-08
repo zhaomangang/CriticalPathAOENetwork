@@ -2,7 +2,7 @@
 /*
 文件名：CriticlPath.h
 描述： 关键路径
-时间：2019.1.7
+时间：
 */
 
 #include"AdjacencyList.h"
@@ -90,10 +90,10 @@ Status CriticalPath(ALGraph G)
 		vl[i] = MAX;
 	}
 	vl[G.vexnum-1] = ve[G.vexnum-1];
-	while (!StackEmpty(&T))		//按拓扑序列求vl
+	while (!StackEmpty(&T))		//按逆拓扑序列求vl
 	{
 		Pop(&T, &j);
-		p = G.vretices[j].firstarc;
+		p = G.vretices[j].firstarc;	
 		while(p!=NULL)
 		{
 			k = p->adjvex;
