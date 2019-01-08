@@ -114,6 +114,6 @@ void CreateDG(ALGraph *G)	//邻接表构建有向图G
 		}//for_j
 
 	}//for_i
-	printf("创建成功\n");
+	//printf("创建成功\n");
 }//CreateDG
 

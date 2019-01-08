@@ -29,7 +29,7 @@ void InitStack(SqStack *s)		//构造一个空栈S
 	if (!s->base) printf("存储分配失败\n");	//存储分配失败
 	s->top = s->base;
 	s->stacksize = STACK_INIT_SIZE;
-	printf("构建成功\n");
+	//printf("构建成功\n");
 }
 
 void DestroyStack(SqStack *s)	//销毁s

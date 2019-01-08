@@ -116,7 +116,35 @@ Status CriticalPath(ALGraph G)
 	i = 0;
 	t = 0;
 	printf("\n关键路径：");
-	for (j = 0; j < G.arcnum; j++)	//求关键路径，以及时间
+	//for (j = 0; j < G.arcnum; j++)	//求关键路径，以及时间
+	//{
+	//	for (p = G.vretices[j].firstarc, i = 0; p; p = p->nextarc)
+	//	{
+	//		k = p->adjvex;
+	//		dut = p->weight;
+	//		ee = ve[j];
+	//		el = vl[k] - dut;
+	//		if (ee == el)
+	//		{
+	//			if (i == 0)
+	//			{
+	//				time = time + p->weight;
+	//				printf("%c ", *(p->info));
+	//				i++;
+	//				if (p->adjvex == G.vexnum - 1)
+	//				{
+	//					t = 1;
+	//					break;
+	//				}
+	//			}
+
+	//		}
+	//	}
+	//	if (t == 1)break;
+	//}
+
+
+	for (j = 0; j < G.arcnum; )	//求关键路径，以及时间
 	{
 		for (p = G.vretices[j].firstarc, i = 0; p; p = p->nextarc)
 		{
@@ -130,6 +158,7 @@ Status CriticalPath(ALGraph G)
 				{
 					time = time + p->weight;
 					printf("%c ", *(p->info));
+					j = p->adjvex;	//下一个该找的顶点
 					i++;
 					if (p->adjvex == G.vexnum - 1)
 					{
@@ -142,6 +171,10 @@ Status CriticalPath(ALGraph G)
 		}
 		if (t == 1)break;
 	}
+
+
+
+
 	printf("\n完成关键活动所需时间：%d\n", time);
 		
 }
