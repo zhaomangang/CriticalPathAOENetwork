@@ -102,7 +102,6 @@ void CreateDG(ALGraph *G)	//邻接表构建有向图G
 				}
 				else
 				{
-					
 					p->nextarc = (ArcNode *)malloc(sizeof(ArcNode));
 					p = p->nextarc;
 					p->info = (InfoType *)malloc(sizeof(InfoType));
